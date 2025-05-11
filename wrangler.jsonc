@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nextjs-hono-better-auth-d1",
+  "main": "src/server/index.ts",
+  "compatibility_date": "2025-03-03",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "nextjs-hono-better-auth-d1",
+      "database_id": "f4a580fb-b029-4573-bb91-faf7106ab3ce",
+      "migrations_dir": "src/server/db/migrations",
+    },
+  ],
+}
