@@ -14,8 +14,8 @@
     "lint": "next lint",
     "format": "prettier --write ./src",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply nextjs-hono-better-auth-d1",
-    "db:migrate-remote": "wrangler d1 migrations apply nextjs-hono-better-auth-d1 --remote"
+    "db:migrate": "wrangler d1 migrations apply timeconnectv2",
+    "db:migrate-remote": "wrangler d1 migrations apply timeconnectv2 --remote"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",

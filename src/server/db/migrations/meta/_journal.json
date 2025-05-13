@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1742073459070,
-      "tag": "0000_bizarre_lester",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1742133582648,
-      "tag": "0001_perfect_maddog",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1742980451040,
-      "tag": "0002_vengeful_power_man",
+      "when": 1747096389068,
+      "tag": "0000_premium_spot",
       "breakpoints": true
     }
   ]

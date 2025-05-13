@@ -41,6 +41,24 @@ const authRoute = honoFactory
     });
     return c.json(user);
   })
+  .post("/logout", async (c) => {
+    const auth = c.get("auth");
+    try {
+      const res = await auth.api.signOut({
+        headers: c.req.raw.headers,
+        asResponse: true,
+      });
+      
+      const cookies = res.headers.get("set-cookie");
+      if (cookies) {
+        c.header("set-cookie", cookies);
+      }
+      return c.json({ success: true });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to logout";
+      return c.json({ message }, 500);
+    }
+  })
   .get("/session", async (c) => {
     const session = c.get("session");
     const user = c.get("user");

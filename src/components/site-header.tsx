@@ -1,16 +1,29 @@
 "use client";
 
 import type { Session, User } from "better-auth";
-import { Menu, Plus } from "lucide-react";
+import { LogOut, Menu, Plus } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { authClient } from "@/lib/auth-client";
 
 export function SiteHeader({ currentSession }: { currentSession: { user: User; session: Session } | null }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut();
+      toast.success("You have been logged out successfully");
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to logout. Please try again.");
+    }
+  };
 
   return (
     <header className="bg-background sticky top-0 z-40 w-full border-b px-4 md:px-0">
@@ -32,13 +45,24 @@ export function SiteHeader({ currentSession }: { currentSession: { user: User; s
         </div>
         <div className="flex items-center gap-2">
           {currentSession ? (
-            <Link
-              href="/create"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hidden h-9 items-center justify-center rounded-md px-3 text-sm font-medium shadow md:inline-flex"
-            >
-              <Plus className="mr-1 h-4 w-4" />
-              New Post
-            </Link>
+            <>
+              <Link
+                href="/create"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 hidden h-9 items-center justify-center rounded-md px-3 text-sm font-medium shadow md:inline-flex"
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                New Post
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="hidden h-9 md:inline-flex"
+              >
+                <LogOut className="mr-1 h-4 w-4" />
+                Logout
+              </Button>
+            </>
           ) : (
             <Link
               href="/login"
@@ -61,9 +85,17 @@ export function SiteHeader({ currentSession }: { currentSession: { user: User; s
                   Blog
                 </Link>
                 {currentSession ? (
-                  <Link href="/create" className="hover:text-foreground/80 text-sm font-medium transition-colors">
-                    Create Post
-                  </Link>
+                  <>
+                    <Link href="/create" className="hover:text-foreground/80 text-sm font-medium transition-colors">
+                      Create Post
+                    </Link>
+                    <button 
+                      onClick={handleLogout}
+                      className="hover:text-foreground/80 text-sm font-medium transition-colors text-left"
+                    >
+                      Logout
+                    </button>
+                  </>
                 ) : (
                   <>
                     <Link href="/login" className="hover:text-foreground/80 text-sm font-medium transition-colors">
