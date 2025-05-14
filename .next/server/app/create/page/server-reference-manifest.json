@@ -1,0 +1,27 @@
+{
+  "node": {
+    "406a73b2d563d838ab358ae0817ac10adba0fb2057": {
+      "workers": {
+        "app/create/page": {
+          "moduleId": "[project]/.next-internal/server/app/create/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/create/page": "rsc"
+      }
+    },
+    "7fde48d6e5a72aced5186a2e3d71580a8272944265": {
+      "workers": {
+        "app/create/page": {
+          "moduleId": "[project]/.next-internal/server/app/create/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/create/page": "rsc"
+      }
+    }
+  },
+  "edge": {}
+}

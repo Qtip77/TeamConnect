@@ -21,6 +21,8 @@
     --color-amber-700: oklch(.555 .163 48.998);
     --color-amber-800: oklch(.473 .137 46.201);
     --color-amber-900: oklch(.414 .112 45.904);
+    --color-yellow-500: oklch(.795 .184 86.047);
+    --color-yellow-600: oklch(.681 .162 75.834);
     --color-green-100: oklch(.962 .044 156.743);
     --color-green-200: oklch(.925 .084 155.995);
     --color-green-300: oklch(.871 .15 154.449);
@@ -1009,6 +1011,14 @@
     margin-right: calc(var(--spacing) * 2);
   }
 
+  .mb-6 {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
+
+  .ml-2 {
+    margin-left: calc(var(--spacing) * 2);
+  }
+
   .ml-auto {
     margin-left: auto;
   }
@@ -1292,6 +1302,10 @@
     min-width: 8rem;
   }
 
+  .min-w-full {
+    min-width: 100%;
+  }
+
   .flex-1 {
     flex: 1;
   }
@@ -1314,6 +1328,10 @@
 
   .grow {
     flex-grow: 1;
+  }
+
+  .table-auto {
+    table-layout: auto;
   }
 
   .border-collapse {
@@ -1532,6 +1550,10 @@
     overflow: hidden;
   }
 
+  .overflow-x-auto {
+    overflow-x: auto;
+  }
+
   .overflow-x-hidden {
     overflow-x: hidden;
   }
@@ -1703,6 +1725,14 @@
     background-color: var(--destructive);
   }
 
+  .bg-gray-200 {
+    background-color: var(--color-gray-200);
+  }
+
+  .bg-green-500 {
+    background-color: var(--color-green-500);
+  }
+
   .bg-muted-foreground {
     background-color: var(--muted-foreground);
   }
@@ -1715,12 +1745,24 @@
     background-color: var(--primary);
   }
 
+  .bg-red-500 {
+    background-color: var(--color-red-500);
+  }
+
   .bg-secondary {
     background-color: var(--secondary);
   }
 
   .bg-transparent {
     background-color: #0000;
+  }
+
+  .bg-white {
+    background-color: var(--color-white);
+  }
+
+  .bg-yellow-500 {
+    background-color: var(--color-yellow-500);
   }
 
   .bg-repeat {
@@ -1919,6 +1961,10 @@
     color: color-mix(in oklab, var(--foreground) 60%, transparent);
   }
 
+  .text-green-500 {
+    color: var(--color-green-500);
+  }
+
   .text-muted-foreground {
     color: var(--muted-foreground);
   }
@@ -1933,6 +1979,10 @@
 
   .text-primary-foreground {
     color: var(--primary-foreground);
+  }
+
+  .text-red-500 {
+    color: var(--color-red-500);
   }
 
   .text-secondary-foreground {
@@ -2394,14 +2444,32 @@
   }
 
   @media (hover: hover) {
+    .hover\:bg-green-600:hover {
+      background-color: var(--color-green-600);
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:bg-primary\/90:hover {
       background-color: color-mix(in oklab, var(--primary) 90%, transparent);
     }
   }
 
   @media (hover: hover) {
+    .hover\:bg-red-600:hover {
+      background-color: var(--color-red-600);
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:bg-secondary\/80:hover {
       background-color: color-mix(in oklab, var(--secondary) 80%, transparent);
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-yellow-600:hover {
+      background-color: var(--color-yellow-600);
     }
   }
 
