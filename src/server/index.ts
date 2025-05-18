@@ -5,6 +5,8 @@ import { corsMiddleware } from "./middlewares/cors-middleware";
 import { csrfMiddleware } from "./middlewares/csrf-middleware";
 import { sessionMiddleware } from "./middlewares/session-middleware";
 import postsRoute from "./routes/posts-route";
+import trucksRoute from "./routes/trucks";
+import timesheetsRoute from "./routes/timesheet-routes";
 
 const routes = honoFactory
   .createApp()
@@ -15,7 +17,9 @@ const routes = honoFactory
   .on(["POST", "GET"], "/auth/*", (c) => {
     return getAuth(c).handler(c.req.raw);
   })
-  .route("/posts", postsRoute);
+  .route("/posts", postsRoute)
+  .route("/trucks", trucksRoute)
+  .route("/timesheets", timesheetsRoute);
 
 export type HonoApp = typeof routes;
 export default routes;

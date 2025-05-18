@@ -777,8 +777,8 @@ __turbopack_context__.s({
     "authClient": (()=>authClient)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$react$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/better-auth/dist/client/react/index.mjs [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$plugins$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/better-auth/dist/plugins/index.mjs [app-client] (ecmascript) <module evaluation>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$shared$2f$better$2d$auth$2e$NGxXmel9$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__a__as__admin$3e$__ = __turbopack_context__.i("[project]/node_modules/better-auth/dist/shared/better-auth.NGxXmel9.mjs [app-client] (ecmascript) <export a as admin>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$plugins$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/better-auth/dist/client/plugins/index.mjs [app-client] (ecmascript) <module evaluation>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$plugins$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/better-auth/dist/client/plugins/index.mjs [app-client] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$env$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/env/client.ts [app-client] (ecmascript)");
 ;
 ;
@@ -786,7 +786,43 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$env$2f$client$2e$ts__
 const authClient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$react$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createAuthClient"])({
     baseURL: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$env$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["env"].NEXT_PUBLIC_API_URL,
     plugins: [
-        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$shared$2f$better$2d$auth$2e$NGxXmel9$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__a__as__admin$3e$__["admin"])()
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$plugins$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["inferAdditionalFields"])({
+            user: {
+                role: {
+                    type: "string",
+                    required: true,
+                    defaultValue: "driver",
+                    input: false
+                },
+                banned: {
+                    type: "boolean",
+                    required: false,
+                    defaultValue: false,
+                    input: false
+                },
+                bannedReason: {
+                    type: "string",
+                    required: false,
+                    defaultValue: "",
+                    input: false
+                },
+                bannedAt: {
+                    type: "number",
+                    required: false,
+                    defaultValue: 0,
+                    input: false
+                }
+            },
+            session: {
+                impersonatedBy: {
+                    type: "string",
+                    required: false,
+                    defaultValue: "",
+                    input: false
+                }
+            }
+        }),
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$better$2d$auth$2f$dist$2f$client$2f$plugins$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["adminClient"])()
     ]
 });
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -905,6 +941,15 @@ function SiteHeader({ currentSession }) {
                                     lineNumber: 49,
                                     columnNumber: 15
                                 }, this),
+                                currentSession.user.role === "admin" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                    href: "/admin",
+                                    className: "bg-purple-700 text-white hover:bg-purple-800 hidden h-9 items-center justify-center rounded-md px-3 text-sm font-medium shadow md:inline-flex",
+                                    children: "Admin"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/site-header.tsx",
+                                    lineNumber: 57,
+                                    columnNumber: 17
+                                }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                     variant: "outline",
                                     size: "sm",
@@ -915,14 +960,14 @@ function SiteHeader({ currentSession }) {
                                             className: "mr-1 h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/site-header.tsx",
-                                            lineNumber: 62,
+                                            lineNumber: 70,
                                             columnNumber: 17
                                         }, this),
                                         "Logout"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/site-header.tsx",
-                                    lineNumber: 56,
+                                    lineNumber: 64,
                                     columnNumber: 15
                                 }, this)
                             ]
@@ -932,12 +977,12 @@ function SiteHeader({ currentSession }) {
                             children: "Login"
                         }, void 0, false, {
                             fileName: "[project]/src/components/site-header.tsx",
-                            lineNumber: 67,
+                            lineNumber: 75,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$theme$2d$toggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ThemeToggle"], {}, void 0, false, {
                             fileName: "[project]/src/components/site-header.tsx",
-                            lineNumber: 74,
+                            lineNumber: 82,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$sheet$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Sheet"], {
@@ -953,7 +998,7 @@ function SiteHeader({ currentSession }) {
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/site-header.tsx",
-                                                lineNumber: 78,
+                                                lineNumber: 86,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -961,18 +1006,18 @@ function SiteHeader({ currentSession }) {
                                                 children: "Toggle menu"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/site-header.tsx",
-                                                lineNumber: 79,
+                                                lineNumber: 87,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/site-header.tsx",
-                                        lineNumber: 77,
+                                        lineNumber: 85,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/site-header.tsx",
-                                    lineNumber: 76,
+                                    lineNumber: 84,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$sheet$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SheetContent"], {
@@ -986,7 +1031,7 @@ function SiteHeader({ currentSession }) {
                                                 children: "Blog"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/site-header.tsx",
-                                                lineNumber: 84,
+                                                lineNumber: 92,
                                                 columnNumber: 17
                                             }, this),
                                             currentSession ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -997,8 +1042,17 @@ function SiteHeader({ currentSession }) {
                                                         children: "Create Post"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/site-header.tsx",
-                                                        lineNumber: 89,
+                                                        lineNumber: 97,
                                                         columnNumber: 21
+                                                    }, this),
+                                                    currentSession.user.role === "admin" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                        href: "/admin",
+                                                        className: "hover:text-foreground/80 text-sm font-medium transition-colors",
+                                                        children: "Admin Dashboard"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/site-header.tsx",
+                                                        lineNumber: 101,
+                                                        columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                         onClick: handleLogout,
@@ -1006,7 +1060,7 @@ function SiteHeader({ currentSession }) {
                                                         children: "Logout"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/site-header.tsx",
-                                                        lineNumber: 92,
+                                                        lineNumber: 105,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
@@ -1018,7 +1072,7 @@ function SiteHeader({ currentSession }) {
                                                         children: "Login"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/site-header.tsx",
-                                                        lineNumber: 101,
+                                                        lineNumber: 114,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1027,7 +1081,7 @@ function SiteHeader({ currentSession }) {
                                                         children: "Register"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/site-header.tsx",
-                                                        lineNumber: 104,
+                                                        lineNumber: 117,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
@@ -1035,18 +1089,18 @@ function SiteHeader({ currentSession }) {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/site-header.tsx",
-                                        lineNumber: 83,
+                                        lineNumber: 91,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/site-header.tsx",
-                                    lineNumber: 82,
+                                    lineNumber: 90,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/site-header.tsx",
-                            lineNumber: 75,
+                            lineNumber: 83,
                             columnNumber: 11
                         }, this)
                     ]

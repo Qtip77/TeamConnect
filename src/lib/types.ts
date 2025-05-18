@@ -1,11 +1,14 @@
 import type { D1Database } from "@cloudflare/workers-types";
-import type { Session, User } from "better-auth";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import type { Env } from "hono";
 
 import type { DBSchema } from "@/server/db";
+import type { getAuth, AuthInstance } from "./auth";
+import type { auth } from "./auth";
 
-import type { getAuth } from "./auth";
+// This type will hold the inferred structure from better-auth,
+// which includes both 'user' and 'session' properties with all custom fields.
+type InferredAuthData = ReturnType<typeof auth>['$Infer']['Session'];
 
 export interface AppBindings extends Env {
   Bindings: {
@@ -15,10 +18,11 @@ export interface AppBindings extends Env {
     BETTER_AUTH_SECRET: string;
   };
   Variables: {
-    auth: ReturnType<typeof getAuth>;
+    auth: ReturnType<typeof getAuth>; // This is the AuthInstance itself
     db: DrizzleD1Database<DBSchema>;
-    session: Session | null;
-    user: User | null;
+    // Changed: Use the inferred types for session and user
+    session: InferredAuthData['session'] | null;
+    user: InferredAuthData['user'] | null;
   };
 }
 

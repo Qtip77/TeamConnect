@@ -4,7 +4,7 @@ import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 
 import { users } from "./auth-schema.sql";
 import { trucks } from "./timesheet-schema.sql";
-import * as maintenanceSchema from "./maintenance-schema.sql";
+
 // Maintenance Logs Table
 export const maintenanceLogs = sqliteTable("maintenance_logs", (t) => ({
   id: t

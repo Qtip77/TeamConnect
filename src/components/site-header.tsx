@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { authClient } from "@/lib/auth-client";
 
-export function SiteHeader({ currentSession }: { currentSession: { user: User; session: Session } | null }) {
+export function SiteHeader({ currentSession }: { currentSession: { user: User & { role?: string }; session: Session } | null }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -53,6 +53,14 @@ export function SiteHeader({ currentSession }: { currentSession: { user: User; s
                 <Plus className="mr-1 h-4 w-4" />
                 New Post
               </Link>
+              {currentSession.user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="bg-purple-700 text-white hover:bg-purple-800 hidden h-9 items-center justify-center rounded-md px-3 text-sm font-medium shadow md:inline-flex"
+                >
+                  Admin
+                </Link>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -89,6 +97,11 @@ export function SiteHeader({ currentSession }: { currentSession: { user: User; s
                     <Link href="/create" className="hover:text-foreground/80 text-sm font-medium transition-colors">
                       Create Post
                     </Link>
+                    {currentSession.user.role === "admin" && (
+                      <Link href="/admin" className="hover:text-foreground/80 text-sm font-medium transition-colors">
+                        Admin Dashboard
+                      </Link>
+                    )}
                     <button 
                       onClick={handleLogout}
                       className="hover:text-foreground/80 text-sm font-medium transition-colors text-left"

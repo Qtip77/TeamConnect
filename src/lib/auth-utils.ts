@@ -37,3 +37,17 @@ export async function requireAuth(redirectTo = "/login") {
 
   return currentSession;
 }
+
+/**
+ * Checks if the user is authenticated and has admin role
+ * @param redirectTo The path to redirect to if not admin
+ */
+export async function requireAdmin(redirectTo = "/") {
+  const currentSession = await requireAuth("/login");
+
+  if (currentSession?.user?.role !== "admin") {
+    redirect(redirectTo);
+  }
+
+  return currentSession;
+}
