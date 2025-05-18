@@ -6,6 +6,10 @@
           "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
+        "app/admin/trucks/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/trucks/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/server-rpc.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -13,6 +17,7 @@
       },
       "layer": {
         "app/admin/page": "rsc",
+        "app/admin/trucks/page": "rsc",
         "app/page": "rsc"
       }
     },
@@ -22,20 +27,8 @@
           "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
-        "app/page": {
-          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/server-rpc.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/admin/page": "rsc",
-        "app/page": "rsc"
-      }
-    },
-    "7fae3b190be3976c44f5fabab5fddeaec1c6e84220": {
-      "workers": {
-        "app/admin/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+        "app/admin/trucks/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/trucks/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
         "app/page": {
@@ -45,6 +38,28 @@
       },
       "layer": {
         "app/admin/page": "rsc",
+        "app/admin/trucks/page": "rsc",
+        "app/page": "rsc"
+      }
+    },
+    "7fae3b190be3976c44f5fabab5fddeaec1c6e84220": {
+      "workers": {
+        "app/admin/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/admin/trucks/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/trucks/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/lib/auth-utils.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/lib/server-rpc.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/page": "rsc",
+        "app/admin/trucks/page": "rsc",
         "app/page": "rsc"
       }
     },
