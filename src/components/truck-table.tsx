@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Loader2, Plus, Trash2, Edit } from 'lucide-react';
-import { z } from 'zod';
+import { z } from 'zod';    
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -76,7 +76,7 @@ const DEFAULT_LIMIT = 10;
 
 export function TruckTable({ isAdmin }: TruckTableProps) {
   const queryClient = useQueryClient();
-
+  
   // State for pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(DEFAULT_LIMIT);
@@ -98,6 +98,7 @@ export function TruckTable({ isAdmin }: TruckTableProps) {
       model: "",
       serialNumber: "",
       lastOdometerReading: null,
+      lastMaintenanceOdometerReading: null,
       maintenanceIntervalKm: 10000,
     },
   });
@@ -110,6 +111,7 @@ export function TruckTable({ isAdmin }: TruckTableProps) {
       model: "",
       serialNumber: "",
       lastOdometerReading: null,
+      lastMaintenanceOdometerReading: null,
       maintenanceIntervalKm: 10000,
     },
   });
@@ -235,6 +237,7 @@ export function TruckTable({ isAdmin }: TruckTableProps) {
       model: truck.model,
       serialNumber: truck.serialNumber,
       lastOdometerReading: truck.lastOdometerReading,
+      lastMaintenanceOdometerReading: truck.lastMaintenanceOdometerReading,
       maintenanceIntervalKm: truck.maintenanceIntervalKm,
     });
     setEditDialogOpen(true);
@@ -329,6 +332,7 @@ export function TruckTable({ isAdmin }: TruckTableProps) {
             <TableHead>Model</TableHead>
             <TableHead>Serial Number</TableHead>
             <TableHead>Last Odometer Reading</TableHead>
+            <TableHead>Last Maintenance Odometer Reading</TableHead>
             <TableHead>Maintenance Interval (km)</TableHead>
             {isAdmin && <TableHead>Actions</TableHead>}
           </TableRow>
@@ -342,6 +346,7 @@ export function TruckTable({ isAdmin }: TruckTableProps) {
                 <TableCell>{truck.model || 'N/A'}</TableCell>
                 <TableCell>{truck.serialNumber || 'N/A'}</TableCell>
                 <TableCell>{truck.lastOdometerReading?.toLocaleString() || 'N/A'}</TableCell>
+                <TableCell>{truck.lastMaintenanceOdometerReading?.toLocaleString() || 'N/A'}</TableCell>
                 <TableCell>{truck.maintenanceIntervalKm.toLocaleString()}</TableCell>
                 {isAdmin && (
                   <TableCell>
@@ -610,6 +615,29 @@ export function TruckTable({ isAdmin }: TruckTableProps) {
               />
               <FormField
                 control={createForm.control}
+                name="lastMaintenanceOdometerReading"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Maintenance Odometer Reading (km)</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        min="0"
+                        placeholder="Enter maintenance odometer reading" 
+                        {...field} 
+                        value={field.value === null ? "" : field.value}
+                        onChange={(e) => {
+                          const value = e.target.value === "" ? null : parseInt(e.target.value);
+                          field.onChange(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={createForm.control}
                 name="maintenanceIntervalKm"
                 render={({ field }) => (
                   <FormItem>
@@ -744,6 +772,29 @@ export function TruckTable({ isAdmin }: TruckTableProps) {
                         type="number" 
                         min="0"
                         placeholder="Enter odometer reading" 
+                        {...field} 
+                        value={field.value === null ? "" : field.value}
+                        onChange={(e) => {
+                          const value = e.target.value === "" ? null : parseInt(e.target.value);
+                          field.onChange(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editForm.control}
+                name="lastMaintenanceOdometerReading"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Maintenance Odometer Reading (km)</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        min="0"
+                        placeholder="Enter maintenance odometer reading" 
                         {...field} 
                         value={field.value === null ? "" : field.value}
                         onChange={(e) => {

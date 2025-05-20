@@ -1,6 +1,5 @@
 import { createAuthClient } from "better-auth/react";
 import { adminClient, inferAdditionalFields } from "better-auth/client/plugins";
-
 import { env } from "@/env/client";
 
 export const authClient = createAuthClient({
@@ -43,7 +42,7 @@ export const authClient = createAuthClient({
           }
         },
     }),
-    adminClient()
+    adminClient(),
   ],
 });
 

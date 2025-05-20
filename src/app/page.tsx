@@ -1,9 +1,9 @@
-import { Plus } from "lucide-react";
+import { Plus, Clock, Truck, Users, GanttChartSquare } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { BlogList } from "@/components/blog-list";
-import { BlogListSkeleton } from "@/components/blog-list-skeleton";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth-utils";
 
 export default async function HomePage() {
@@ -45,10 +45,77 @@ export default async function HomePage() {
         </div>
       </div>
       <div className="py-8">
-        <Suspense fallback={<BlogListSkeleton />}>
-          <BlogList />
+        <Suspense fallback={<div>Loading...</div>}>
+          {currentSession?.user?.role === "admin" ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <DashboardCard
+                title="User Management"
+                description="Manage users and their roles."
+                href="/admin/user-management"
+                icon={<Users className="h-8 w-8 text-blue-500" />}
+              />
+              <DashboardCard
+                title="Trucks"
+                description="Manage truck information and assignments."
+                href="/admin/trucks"
+                icon={<Truck className="h-8 w-8 text-green-500" />}
+              />
+              <DashboardCard
+                title="Timesheet Table"
+                description="View and manage timesheets."
+                href="/admin/timesheets"
+                icon={<GanttChartSquare className="h-8 w-8 text-purple-500" />}
+              />
+            </div>
+          ) : currentSession?.user?.role === "driver" ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <DashboardCard
+                title="Trucks"
+                description="View assigned trucks and details."
+                href="/drtrucks"
+                icon={<Truck className="h-8 w-8 text-green-500" />}
+              />
+              <DashboardCard
+                title="Timesheet Submissions"
+                description="View your past timesheet submissions."
+                href="/driver/timesheets"
+                icon={<Clock className="h-8 w-8 text-yellow-500" />}
+              />
+              <DashboardCard
+                title="Create New Timesheet"
+                description="Submit a new timesheet entry."
+                href="/timesheets/create"
+                icon={<Plus className="h-8 w-8 text-blue-500" />}
+              />
+            </div>
+          ) : (
+            <div>Placeholder for other users</div>
+          )}
         </Suspense>
       </div>
     </div>
+  );
+}
+
+interface DashboardCardProps {
+  title: string;
+  description: string;
+  href: string;
+  icon: React.ReactNode;
+}
+
+function DashboardCard({ title, description, href, icon }: DashboardCardProps) {
+  return (
+    <Link href={href} className="block hover:shadow-lg transition-shadow duration-200 rounded-lg">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+          {icon}
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">{description}</p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

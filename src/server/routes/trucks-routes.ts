@@ -58,7 +58,7 @@ const trucksRoute = honoFactory
     }
     return c.json(truck);
   })
-  // Update a truck (Admin only)
+  // Update a truck (Admin and Maintenance roles)
   .patch("/:id", zValidator("json", truckUpdateSchema), async (c) => {
     const db = c.get("db");
     const user = c.get("user");
@@ -67,11 +67,36 @@ const trucksRoute = honoFactory
     if (!user) {
       return c.json({ error: "Unauthorized" }, 401);
     }
-    if (user.role !== "admin") {
+    
+    // Allow both admin and maintenance roles to update trucks
+    // For maintenance role, restrict to only maintenance-related fields
+    const isMaintenanceOnly = user.role === "maintenance";
+    const isAdmin = user.role === "admin";
+    
+    if (!isAdmin && !isMaintenanceOnly) {
       return c.json({ error: "Forbidden" }, 403);
     }
 
     const validJson = c.req.valid("json");
+
+    // If maintenance role, only allow updating lastMaintenanceOdometerReading
+    if (isMaintenanceOnly) {
+      const { lastMaintenanceOdometerReading, ...rest } = validJson;
+      
+      // If trying to update non-maintenance fields, reject
+      if (Object.keys(rest).length > 0) {
+        return c.json({ 
+          error: "Maintenance role can only update maintenance-related fields" 
+        }, 403);
+      }
+      
+      // If no maintenance fields provided, reject
+      if (lastMaintenanceOdometerReading === undefined) {
+        return c.json({ 
+          error: "No maintenance fields provided to update" 
+        }, 400);
+      }
+    }
 
     // Check if truck exists before attempting update
     const existingTruck = await db.query.trucks.findFirst({
@@ -86,18 +111,7 @@ const trucksRoute = honoFactory
         .update(trucks)
         .set({
           ...validJson,
-          updatedAt: new Date(), // Drizzle/SQLite handles this if schema has .default(sql`(unixepoch())`) on update trigger or similar logic
-                                // but explicitly setting it is safer for some setups.
-                                // timesheet-schema.sql.ts has updatedAt .default(sql`(unixepoch())`) which might only apply on insert.
-                                // For updates, it's better to set it manually if not auto-updated by DB triggers.
-                                // Given the schema, it should auto-update. Let's rely on the schema's default for updatedAt if possible,
-                                // or be explicit: updatedAt: Math.floor(Date.now() / 1000) if it's a number timestamp.
-                                // The schema defines updatedAt as integer with mode "timestamp" and default(sql`(unixepoch())`).
-                                // This default likely applies on insert. For update, we should set it.
-                                // Let's assume the hono/drizzle setup handles this, or it should be `updatedAt: sql\`(unixepoch())\` if using drizzle orm update.
-                                // For simplicity with .set(), we might need to pass the value. If it's a Date object, Drizzle handles conversion for timestamp mode.
-                                // Or, if number (unix seconds), then Math.floor(Date.now()/1000)
-                                // The createSelectSchema has preprocess for number -> Date -> string. Let's send Date obj for consistency. 
+          updatedAt: new Date(),
         })
         .where(eq(trucks.id, truckId))
         .returning();

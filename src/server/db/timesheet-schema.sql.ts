@@ -15,6 +15,7 @@ export const trucks = sqliteTable("trucks", (t) => ({
   model: t.text("model"),
   serialNumber: t.text("serial_number").unique(),
   lastOdometerReading: t.integer("last_odometer_reading").default(0),
+  lastMaintenanceOdometerReading: t.integer("last_maintenance_odometer_reading").default(0),
   maintenanceIntervalKm: t.integer("maintenance_interval_km").notNull().default(10000), // Default to 10,000 KM
   createdAt: t
     .integer("created_at", { mode: "timestamp" })

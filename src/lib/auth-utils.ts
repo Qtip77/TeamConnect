@@ -51,3 +51,17 @@ export async function requireAdmin(redirectTo = "/") {
 
   return currentSession;
 }
+
+/**
+ * Checks if the user is authenticated and has driver role
+ * @param redirectTo The path to redirect to if not driver
+ */
+export async function requireDriver(redirectTo = "/") {
+  const currentSession = await requireAuth("/login");
+
+  if (currentSession?.user?.role !== "driver") {
+    redirect(redirectTo);
+  }
+
+  return currentSession;
+}

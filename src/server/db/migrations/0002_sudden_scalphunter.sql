@@ -1,0 +1,1 @@
+ALTER TABLE `trucks` ADD `last_maintenance_odometer_reading` integer DEFAULT 0;

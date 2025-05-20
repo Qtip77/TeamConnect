@@ -15,6 +15,13 @@
       "when": 1747599985937,
       "tag": "0001_dear_preak",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1747685959978,
+      "tag": "0002_sudden_scalphunter",
+      "breakpoints": true
     }
   ]
 }
