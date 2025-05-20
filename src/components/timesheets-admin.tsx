@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Loader2, Plus, Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, Plus, Edit, Trash2, CheckCircle, XCircle, Search, X } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -106,15 +106,45 @@ interface TimesheetsAdminProps {
 
 const DEFAULT_LIMIT = 10;
 
+// Add filter form schema
+const filterFormSchema = z.object({
+  searchField: z.enum(['driver', 'truck']),
+  searchTerm: z.string(),
+  statusFilter: z.string(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+});
+
+type FilterFormValues = z.infer<typeof filterFormSchema>;
+
 export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
   const queryClient = useQueryClient();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(DEFAULT_LIMIT);
 
+  // Add filter state
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchField, setSearchField] = useState<'driver' | 'truck'>('driver');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [startDateFilter, setStartDateFilter] = useState<string>('');
+  const [endDateFilter, setEndDateFilter] = useState<string>('');
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<FrontendTimesheet | null>(null);
+
+  // Setup filter form
+  const filterForm = useForm<FilterFormValues>({
+    resolver: zodResolver(filterFormSchema),
+    defaultValues: {
+      searchField: 'driver',
+      searchTerm: '',
+      statusFilter: 'all',
+      startDate: '',
+      endDate: '',
+    },
+  });
 
   // Fetch Trucks for dropdown
   const { data: trucksData, isLoading: isLoadingTrucks } = useQuery<Truck[]>({
@@ -126,18 +156,20 @@ export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
     },
   });
 
-  // Fetch Billing Rates for dropdown
-  const { data: billingRatesData, isLoading: isLoadingBillingRates } = useQuery<BillingRate[]>({
+  // Fetch Billing Rates for dropdown - handle errors properly
+  const { data: billingRatesData = [], isLoading: isLoadingBillingRates } = useQuery<BillingRate[]>({
     queryKey: ['billingRates'],
     queryFn: async () => {
-      const response = await clientRPC.api.billingRates.$get();
-      if (!response.ok) throw new Error('Failed to fetch billing rates');
-      return response.json();
+      try {
+        // @ts-ignore - billingRates might not exist in the API yet
+        const response = await clientRPC.api.billingRates.$get();
+        if (!response.ok) return [];
+        return response.json();
+      } catch (error) {
+        console.error('Error fetching billing rates:', error);
+        return [];
+      }
     },
-    onError: (error) => {
-      console.error('Error fetching billing rates:', error);
-      return []; // Return empty array if the endpoint doesn't exist yet
-    }
   });
 
   // Form for editing
@@ -146,7 +178,7 @@ export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
     // Default values will be set when opening the dialog
   });
 
-  const timesheetsQueryKey = ['timesheets', 'admin', currentPage, limit];
+  const timesheetsQueryKey = ['timesheets', 'admin', currentPage, limit, searchTerm, searchField, statusFilter, startDateFilter, endDateFilter];
 
   const { data: timesheetsResponse, isLoading: isLoadingTimesheets, error: timesheetsError } = useQuery<{ data: FrontendTimesheet[], total: number }>({
     queryKey: timesheetsQueryKey,
@@ -165,8 +197,52 @@ export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
         }
         throw new Error(errorMessage);
       }
-      const data = await response.json() as FrontendTimesheet[];
-      return { data, total: data.length };
+      const allTimesheets = await response.json() as FrontendTimesheet[];
+      
+      // Apply filters client-side since we're getting all timesheets
+      let filteredTimesheets = [...allTimesheets];
+      
+      // Apply search filter
+      if (searchTerm) {
+        filteredTimesheets = filteredTimesheets.filter(timesheet => {
+          if (searchField === 'driver') {
+            const driverName = timesheet.driver?.name || '';
+            const driverEmail = timesheet.driver?.email || '';
+            return driverName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                   driverEmail.toLowerCase().includes(searchTerm.toLowerCase());
+          } else if (searchField === 'truck') {
+            const truckNumber = timesheet.truck?.unitNumber || '';
+            return truckNumber.toLowerCase().includes(searchTerm.toLowerCase());
+          }
+          return true;
+        });
+      }
+      
+      // Apply status filter
+      if (statusFilter && statusFilter !== 'all') {
+        filteredTimesheets = filteredTimesheets.filter(timesheet => 
+          timesheet.status === statusFilter
+        );
+      }
+      
+      // Apply date filters
+      if (startDateFilter) {
+        const startDate = new Date(startDateFilter);
+        filteredTimesheets = filteredTimesheets.filter(timesheet => {
+          const shiftDate = timesheet.shiftStartDate ? new Date(timesheet.shiftStartDate) : null;
+          return shiftDate ? shiftDate >= startDate : false;
+        });
+      }
+      
+      if (endDateFilter) {
+        const endDate = new Date(endDateFilter);
+        filteredTimesheets = filteredTimesheets.filter(timesheet => {
+          const shiftDate = timesheet.shiftStartDate ? new Date(timesheet.shiftStartDate) : null;
+          return shiftDate ? shiftDate <= endDate : false;
+        });
+      }
+      
+      return { data: filteredTimesheets, total: filteredTimesheets.length };
     },
   });
   
@@ -274,13 +350,48 @@ export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
   const handleQuickReject = (timesheet: FrontendTimesheet) => {
     // Open edit form with rejected status pre-selected
     setSelectedTimesheet(timesheet);
+    // Fix the reset call to only include compatible properties
     editForm.reset({
-      ...timesheet,
-      status: "rejected",
+      truckId: timesheet.truckId || undefined,
       shiftStartDate: timesheet.shiftStartDate ? dateToTimestampSeconds(new Date(timesheet.shiftStartDate)) : undefined,
       shiftEndDate: timesheet.shiftEndDate ? dateToTimestampSeconds(new Date(timesheet.shiftEndDate)) : undefined,
+      startOdometerReading: timesheet.startOdometerReading ?? undefined,
+      endOdometerReading: timesheet.endOdometerReading ?? undefined,
+      notes: timesheet.notes ?? undefined,
+      status: "rejected", // Preset to rejected
+      rejectionReason: '', // Empty string for user to fill in
+      billingRateId: timesheet.billingRateId ?? undefined,
+      totalBilledAmount: timesheet.totalBilledAmount ?? undefined,
     });
     setEditDialogOpen(true);
+  };
+  
+  // Handle filter form submission
+  const handleFilterSubmit = (values: FilterFormValues) => {
+    setSearchField(values.searchField);
+    setSearchTerm(values.searchTerm);
+    setStatusFilter(values.statusFilter);
+    setStartDateFilter(values.startDate || '');
+    setEndDateFilter(values.endDate || '');
+    setCurrentPage(1);
+  };
+  
+  // Handle filter form reset
+  const handleFilterReset = () => {
+    filterForm.reset({
+      searchField: 'driver',
+      searchTerm: '',
+      statusFilter: 'all',
+      startDate: '',
+      endDate: '',
+    });
+    setSearchField('driver');
+    setSearchTerm('');
+    setStatusFilter('all');
+    setStartDateFilter('');
+    setEndDateFilter('');
+    setCurrentPage(1);
+    queryClient.invalidateQueries({ queryKey: timesheetsQueryKey });
   };
 
   const paginatedTimesheets = timesheets.slice((currentPage - 1) * limit, currentPage * limit);
@@ -380,6 +491,80 @@ export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
 
   return (
     <div className="container mx-auto">
+      {/* Add filter form */}
+      <form onSubmit={filterForm.handleSubmit(handleFilterSubmit)} className="flex flex-wrap gap-4 mb-6 items-center">
+        <Select
+          value={filterForm.watch('searchField')}
+          onValueChange={(value) => filterForm.setValue('searchField', value as 'driver' | 'truck')}
+        >
+          <SelectTrigger className="border rounded-md w-[180px]">
+            <SelectValue placeholder="Search by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="driver">Search by Driver</SelectItem>
+            <SelectItem value="truck">Search by Truck</SelectItem>
+          </SelectContent>
+        </Select>
+        
+        <Input
+          {...filterForm.register('searchTerm')}
+          placeholder={`Search ${filterForm.watch('searchField')}...`}
+          disabled={isLoading || isMutating}
+          className="w-64"
+        />
+        
+        <Select
+          value={filterForm.watch('statusFilter')}
+          onValueChange={(value) => filterForm.setValue('statusFilter', value)}
+        >
+          <SelectTrigger className="border rounded-md w-[180px]">
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="approved">Approved</SelectItem>
+            <SelectItem value="rejected">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
+        
+        <div className="flex gap-2 items-center">
+          <Input
+            type="date"
+            {...filterForm.register('startDate')}
+            placeholder="Start Date"
+            className="w-40"
+            disabled={isLoading || isMutating}
+          />
+          <span>to</span>
+          <Input
+            type="date"
+            {...filterForm.register('endDate')}
+            placeholder="End Date"
+            className="w-40"
+            disabled={isLoading || isMutating}
+          />
+        </div>
+        
+        <Button
+          type="submit"
+          disabled={isLoading || isMutating}
+        >
+          <Search size={16} className="mr-1" />
+          Filter
+        </Button>
+        
+        <Button
+          type="button"
+          onClick={handleFilterReset}
+          disabled={isLoading || isMutating}
+          variant="outline"
+        >
+          <X size={16} className="mr-1" />
+          Clear Filters
+        </Button>
+      </form>
+
       {(isLoadingTimesheets && timesheetsResponse) && (
         <div className="flex items-center mb-4 text-sm text-muted-foreground">
           <Loader2 size={16} className="animate-spin mr-2" /> 
@@ -477,39 +662,110 @@ export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
         </TableBody>
       </Table>
 
-      {totalTimesheets > 0 && totalPages > 1 && (
+      {totalTimesheets > 0 && (
          <div className="flex justify-between items-center mt-6">
             <Pagination>
-                <PaginationContent>
+              <PaginationContent>
                 <PaginationItem>
-                    <PaginationPrevious
+                  <PaginationPrevious 
                     onClick={() => currentPage > 1 && !isLoading && !isMutating ?
-                        setCurrentPage((prev) => Math.max(1, prev - 1)) : undefined}
+                      setCurrentPage((prev) => Math.max(1, prev - 1)) : undefined}
                     className={(currentPage === 1 || isLoading || isMutating) ?
-                        "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
+                      "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
                 </PaginationItem>
-                {[...Array(totalPages).keys()].map(num => (
-                    <PaginationItem key={num}>
-                    <PaginationLink
-                        onClick={() => !isLoading && !isMutating ? setCurrentPage(num + 1) : undefined}
-                        isActive={currentPage === num + 1}
-                        className={(isLoading || isMutating) && currentPage !== num + 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                
+                {/* First page */}
+                {currentPage > 2 && (
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => !isLoading && !isMutating ? setCurrentPage(1) : undefined}
+                      className={isLoading || isMutating ? "pointer-events-none opacity-50" : "cursor-pointer"}
                     >
-                        {num + 1}
+                      1
                     </PaginationLink>
-                    </PaginationItem>
-                ))}
+                  </PaginationItem>
+                )}
+                
+                {/* Previous pages */}
+                {currentPage > 3 && (
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => !isLoading && !isMutating ? setCurrentPage(currentPage - 2) : undefined}
+                      className={isLoading || isMutating ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    >
+                      {currentPage - 2}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => !isLoading && !isMutating ? setCurrentPage(currentPage - 1) : undefined}
+                      className={isLoading || isMutating ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    >
+                      {currentPage - 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                
+                {/* Current page */}
                 <PaginationItem>
-                    <PaginationNext
-                    onClick={() => currentPage < totalPages && !isLoading && !isMutating ?
-                        setCurrentPage((prev) => Math.min(totalPages, prev + 1)) : undefined}
-                    className={(currentPage >= totalPages || isLoading || isMutating) ?
-                        "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
+                  <PaginationLink 
+                    isActive
+                    className={isLoading || isMutating ? "opacity-50" : ""}
+                  >
+                    {currentPage}
+                  </PaginationLink>
                 </PaginationItem>
-                </PaginationContent>
+                
+                {/* Next pages */}
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => !isLoading && !isMutating ? setCurrentPage(currentPage + 1) : undefined}
+                      className={isLoading || isMutating ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    >
+                      {currentPage + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                
+                {currentPage < totalPages - 1 && (
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => !isLoading && !isMutating ? setCurrentPage(currentPage + 2) : undefined}
+                      className={isLoading || isMutating ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    >
+                      {currentPage + 2}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                
+                {/* Last page */}
+                {currentPage < totalPages - 2 && (
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => !isLoading && !isMutating ? setCurrentPage(totalPages) : undefined}
+                      className={isLoading || isMutating ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    >
+                      {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => currentPage < totalPages && !isLoading && !isMutating ?
+                      setCurrentPage((prev) => Math.min(totalPages, prev + 1)) : undefined}
+                    className={(currentPage >= totalPages || isLoading || isMutating) ?
+                      "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
             </Pagination>
+            
             <div className="flex items-center space-x-2 text-sm">
                 <span>Rows per page:</span>
                 <Select
@@ -651,11 +907,15 @@ export function TimesheetsAdmin({ currentUser }: TimesheetsAdminProps) {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="null">None</SelectItem>
-                          {billingRatesData?.map(rate => (
-                            <SelectItem key={rate.id} value={rate.id}>
-                              {rate.rateName} - {rate.ratePerHour}/{rate.currency}
-                            </SelectItem>
-                          ))}
+                          {billingRatesData && billingRatesData.length > 0 ? (
+                            billingRatesData.map(rate => (
+                              <SelectItem key={rate.id} value={rate.id}>
+                                {rate.rateName} - {rate.ratePerHour}/{rate.currency}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="no-rates" disabled>No billing rates available</SelectItem>
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
