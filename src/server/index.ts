@@ -7,6 +7,7 @@ import { sessionMiddleware } from "./middlewares/session-middleware";
 import trucksRoute from "./routes/trucks-routes";
 import timesheetsRoute from "./routes/timesheet-routes";
 
+
 const routes = honoFactory
   .createApp()
   .basePath("/api")
@@ -18,6 +19,7 @@ const routes = honoFactory
   })
   .route("/trucks", trucksRoute)
   .route("/timesheets", timesheetsRoute);
+
 
 export type HonoApp = typeof routes;
 export default routes;

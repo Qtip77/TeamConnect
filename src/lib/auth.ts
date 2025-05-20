@@ -94,7 +94,9 @@ plugins: [
       console.log(email, url);
     },
   }),
-  admin(),
+  admin({
+    defaultRole: "driver",
+  }),
   nextCookies(),
 ],
 });

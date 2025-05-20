@@ -72,7 +72,7 @@ export default async function HomePage() {
               <DashboardCard
                 title="Trucks"
                 description="View assigned trucks and details."
-                href="/drtrucks"
+                href="/driver/trucks"
                 icon={<Truck className="h-8 w-8 text-green-500" />}
               />
               <DashboardCard
@@ -84,7 +84,7 @@ export default async function HomePage() {
               <DashboardCard
                 title="Create New Timesheet"
                 description="Submit a new timesheet entry."
-                href="/timesheets/create"
+                href="/driver/timesheets/create"
                 icon={<Plus className="h-8 w-8 text-blue-500" />}
               />
             </div>

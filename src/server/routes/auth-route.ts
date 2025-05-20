@@ -37,8 +37,10 @@ const authRoute = honoFactory
         email,
         password,
         name,
-      },
+      },      
     });
+
+
     return c.json(user);
   })
   .post("/logout", async (c) => {

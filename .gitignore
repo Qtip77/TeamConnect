@@ -20,11 +20,6 @@ Thumbs.db
 # Ignore build artifacts
 build/
 dist/
-*.o
-*.out
-*.exe
-*.dll
-*.so
 .next/
 .wrangler/
 
