@@ -74,7 +74,7 @@ export const billingRates = sqliteTable("billing_rates", (t) => ({
     .$defaultFn(() => createId()),
   rateName: t.text("rate_name").notNull().unique(), // e.g., "Standard Driver Rate", "Weekend Rate"
   ratePerHour: real("rate_per_hour").notNull(),
-  currency: t.text("currency").notNull().default("USD"),
+  currency: t.text("currency").notNull().default("CAD"),
   description: t.text("description"),
   isActive: t.integer("is_active", { mode: "boolean" }).default(true),
   createdBy: t.text("created_by").references(() => users.id, { onDelete: "set null" }), // Admin/Manager

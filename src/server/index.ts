@@ -6,6 +6,7 @@ import { csrfMiddleware } from "./middlewares/csrf-middleware";
 import { sessionMiddleware } from "./middlewares/session-middleware";
 import trucksRoute from "./routes/trucks-routes";
 import timesheetsRoute from "./routes/timesheet-routes";
+import billingRatesRoute from "./routes/billingrates-routes";
 
 
 const routes = honoFactory
@@ -18,7 +19,8 @@ const routes = honoFactory
     return getAuth(c).handler(c.req.raw);
   })
   .route("/trucks", trucksRoute)
-  .route("/timesheets", timesheetsRoute);
+  .route("/timesheets", timesheetsRoute)
+  .route("/billingRates", billingRatesRoute);
 
 
 export type HonoApp = typeof routes;

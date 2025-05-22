@@ -27,8 +27,8 @@ export const billingRateCreateSchema = createInsertSchema(billingRates, {
   ratePerHour: z.number().positive("Rate per hour must be positive."),
   currency: z.string().min(1, "Currency is required."),
   description: z.string().optional(),
-  isActive: z.boolean().default(true),
-}).omit({ createdBy: true}); // createdBy will be set by the server based on logged-in user
+  isActive: z.boolean(),
+}).omit({ id: true, createdBy: true, createdAt: true, updatedAt: true}); // createdBy will be set by the server based on logged-in user
 export type BillingRateCreate = z.infer<typeof billingRateCreateSchema>;
 
 export const billingRateUpdateSchema = createUpdateSchema(billingRates, {

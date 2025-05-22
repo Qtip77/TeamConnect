@@ -30,37 +30,12 @@ export function SiteHeader({ currentSession }: { currentSession: { user: User & 
       <div className="container mx-auto flex h-16 items-center justify-between">
         <div className="flex gap-6 md:gap-10">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block">Next.js Blog</span>
+            <span className="hidden font-bold sm:inline-block">Team Connect</span>
           </Link>
-          <nav className="hidden gap-6 md:flex">
-            <Link
-              href="/"
-              className={`flex items-center text-sm font-medium ${
-                pathname === "/" ? "text-foreground" : "text-foreground/60"
-              } hover:text-foreground/80 transition-colors`}
-            >
-              Blog
-            </Link>
-          </nav>
         </div>
         <div className="flex items-center gap-2">
           {currentSession ? (
             <>
-              <Link
-                href="/create"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 hidden h-9 items-center justify-center rounded-md px-3 text-sm font-medium shadow md:inline-flex"
-              >
-                <Plus className="mr-1 h-4 w-4" />
-                New Post
-              </Link>
-              {currentSession.user.role === "admin" && (
-                <Link
-                  href="/admin"
-                  className="bg-purple-700 text-white hover:bg-purple-800 hidden h-9 items-center justify-center rounded-md px-3 text-sm font-medium shadow md:inline-flex"
-                >
-                  Admin
-                </Link>
-              )}
               <Button
                 variant="outline"
                 size="sm"

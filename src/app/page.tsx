@@ -1,4 +1,4 @@
-import { Plus, Clock, Truck, Users, GanttChartSquare } from "lucide-react";
+import { Plus, Clock, Truck, Users, GanttChartSquare, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -12,19 +12,13 @@ export default async function HomePage() {
     <div className="container mx-auto px-4 py-8 md:px-0 md:py-12">
       <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
         <div className="flex-1 space-y-4">
-          <h1 className="inline-block text-4xl font-extrabold tracking-tight lg:text-5xl">Blog</h1>
-          <p className="text-muted-foreground text-xl">Explore the latest articles and insights from our team.</p>
+          <h1 className="inline-block text-4xl font-extrabold tracking-tight lg:text-5xl">Abe McColm</h1>
+          <p className="text-muted-foreground text-xl">Manage your company's fleet and employees.</p>
         </div>
         <div className="flex items-center gap-2">
           {currentSession ? (
             <>
-              <Link
-                href="/create"
-                className="bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                New Post
-              </Link>
+              
             </>
           ) : (
             <>
@@ -51,7 +45,7 @@ export default async function HomePage() {
               <DashboardCard
                 title="User Management"
                 description="Manage users and their roles."
-                href="/admin/user-management"
+                href="/admin"
                 icon={<Users className="h-8 w-8 text-blue-500" />}
               />
               <DashboardCard
@@ -66,13 +60,19 @@ export default async function HomePage() {
                 href="/admin/timesheets"
                 icon={<GanttChartSquare className="h-8 w-8 text-purple-500" />}
               />
+              <DashboardCard
+                title="Billing Rates"
+                description="Manage billing rates for timesheets."
+                href="/admin/billing-rates"
+                icon={<DollarSign className="h-8 w-8 text-amber-500" />}
+              />
             </div>
           ) : currentSession?.user?.role === "driver" ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               <DashboardCard
                 title="Trucks"
                 description="View assigned trucks and details."
-                href="/driver/trucks"
+                href="/trucks"
                 icon={<Truck className="h-8 w-8 text-green-500" />}
               />
               <DashboardCard
@@ -84,7 +84,7 @@ export default async function HomePage() {
               <DashboardCard
                 title="Create New Timesheet"
                 description="Submit a new timesheet entry."
-                href="/driver/timesheets/create"
+                href="/driver/timesheets/new"
                 icon={<Plus className="h-8 w-8 text-blue-500" />}
               />
             </div>

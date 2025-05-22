@@ -28,6 +28,12 @@ export default function AdminLayout({
             >
               Timesheets
             </Link>
+            <Link
+              href="/admin/billing-rates"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              Billing Rates
+            </Link>
           </nav>
         </div>
       </div>

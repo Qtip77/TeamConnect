@@ -165,6 +165,22 @@ const timesheetsRoute = honoFactory
           updatePayload.approvedBy = user.id;
           updatePayload.approvedAt = new Date();
           updatePayload.rejectionReason = null; 
+          
+          // Update the associated truck's lastOdometerReading when timesheet is approved
+          if (existingTimesheet.truckId && existingTimesheet.endOdometerReading) {
+            try {
+              await db
+                .update(trucks)
+                .set({
+                  lastOdometerReading: existingTimesheet.endOdometerReading,
+                  updatedAt: new Date()
+                })
+                .where(eq(trucks.id, existingTimesheet.truckId));
+            } catch (error: any) {
+              console.error("Failed to update truck odometer reading:", error.message);
+              // Continue with timesheet approval even if truck update fails
+            }
+          }
         } else if (status === "rejected") {
           updatePayload.approvedBy = null;
           updatePayload.approvedAt = null;
